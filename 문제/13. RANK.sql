@@ -26,25 +26,6 @@ LIMIT 10
 - LIMIT로 정한 수인 10 만큼 반환하게끔 제한 할 수가 있다
 
 <풀이 쿼리>
-select *
-  from tproduction;
-  
-select p1.inumber 
-     , p1.pcount 
-  from tproduction p1
- where p1.pdate between cast('20200101' as timestamp)
-                    and cast('20210101' as timestamp);
-                                
-select t1.inumber as 제품_코드
-     , t1.sum_pcount as 총_생산량
-  from (
-            select p1.inumber 
-                 , sum(p1.pcount) as sum_pcount
-              from tproduction p1
-             where p1.pdate between cast('20200101' as timestamp)
-                                and cast('20210101' as timestamp)
-             group by p1.inumber
-        ) t1
- order by t1.sum_pcount desc; 
+
  
                 
