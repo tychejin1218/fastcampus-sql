@@ -26,6 +26,17 @@ LIMIT 10
 - LIMIT로 정한 수인 10 만큼 반환하게끔 제한 할 수가 있다
 
 <풀이 쿼리>
-
+select *
+  from tproduction;
+  
+select rank() over (order by t1.sum_pcount desc) as 순위
+     , t1.enumber as 직원_코드 
+     , t1.sum_pcount as 총_생산량
+  from (
+            select p1.enumber 
+                 , sum(p1.pcount) as sum_pcount 
+              from tproduction p1
+             group by p1.enumber
+        ) t1
+ limit 10;                 
  
-                
