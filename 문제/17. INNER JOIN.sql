@@ -34,3 +34,24 @@ INumber 에서 1 번째부터 2 개까지 문자를 가져옵니다.
 
 
 <풀이 쿼리>
+select *
+  from torder;
+
+select *
+  from tproduction;
+  
+select *
+  from titem;
+  
+select i1.iname as 제품명
+     , sum(p1.pcount) as 총_판매량
+  from torder o1
+ inner join tproduction p1
+    on o1.pnumber = p1.pnumber 
+ inner join titem i1
+    on p1.inumber = i1.inumber   
+ where o1.odate between cast('20210101' as timestamp) 
+                    and cast('20210201' as timestamp)
+   and p1.inumber like 'I4%'
+ group by i1.iname;
+   
