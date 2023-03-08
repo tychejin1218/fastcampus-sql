@@ -1,7 +1,6 @@
 20. OUTER JOIN
 2020년 1월의 제품 별 생산량의 순위를 확인하기 위하여 제품명과 생산량을 순위를 매겨 출력하시오.
-(모든 제품이 출력되어야 하며 공동순위가 있다면 다음 순위는 공동순위의 수 만큼 밀려나고 생산되지 않은 제품
-은 제일 마지막 순위로 결정되어야 한다)
+(모든 제품이 출력되어야 하며 공동순위가 있다면 다음 순위는 공동순위의 수 만큼 밀려나고 생산되지 않은 제품은 제일 마지막 순위로 결정되어야 한다)
 
 <정답 쿼리>
 SELECT tit.IName AS 제품명, tBase.PCount AS 생산량, -------------- ①
@@ -40,3 +39,33 @@ TO_CHAR(tpr.PDate,'YYYY-MM-DD')
 텍스트타입으로 리턴한다.
 
 <풀이 쿼리>
+select *
+  from tproduction;
+  
+select *
+  from titem;
+  
+with temp_production as (
+    select p1.inumber 
+         , sum(p1.pcount) as sum_pcount 
+      from tproduction p1
+     where pdate between cast('20200101' as date)
+                     and cast('20200201' as date)
+     group by p1.inumber
+)
+select i1.iname as 제품명
+     , p1.sum_pcount as 생산량
+     , rank () over (order by p1.sum_pcount desc nulls last) as 순위
+  from titem i1 
+  left outer join temp_production p1
+    on i1.inumber = p1.inumber;
+  
+  
+select i1.iname as 제품명
+     , p1.pcount as 생산량 
+     , rank () over (order by p1.pcount desc nulls last) as 순위
+  from titem i1
+  left outer join tproduction p1
+    on (i1.inumber = p1.inumber 
+        and p1.pdate between cast('20200101' as date)
+                        and cast('20200201' as date));
