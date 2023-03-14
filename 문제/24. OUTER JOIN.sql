@@ -33,3 +33,28 @@ RReason(반품사유)과 비교한다.
 ⑦ 서브쿼리 tBase(별칭)에서 조건에 해당하지 않는 정보까지 출력해주기 위하여 LEFT OUTER JOIN을 사용한다
 
 <풀이 쿼리>
+select *
+  from tcustomer;
+
+select *
+  from temployee;
+  
+with temp_customer as (
+    select *
+      from tcustomer c1
+     inner join torder o1
+        on o1.cnumber = c1.cnumber
+     inner join tproduction p1
+        on p1.pnumber = o1.pnumber 
+     inner join treturn r1
+        on r1.onumber = o1.onumber
+     inner join treturnreason r2
+        on r2.rrnumber = r1.rrnumber and r2.rreason != '불량'
+)  
+select c1.cname as 고객명
+     , c1.caddr as 고객_주소 
+     , e1.ename as 직원명
+  from temp_customer c1
+  left outer join temployee e1
+    on e1.eaddr = c1.caddr;
+  
